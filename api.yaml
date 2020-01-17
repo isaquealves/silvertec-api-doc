@@ -1,0 +1,378 @@
+openapi: "3.0.0"
+info:
+  version: 0.1.0
+  title: Silvertec informatica - Monte seu próprio computador
+  license:
+    name: MIT
+  description: Uma api simples para facilitar aos clientes a compra de componentes para seu novo computador
+
+servers:
+  - url: '{protocol}://{address}/v1'
+    variables:
+      protocol:
+        default: http
+        enum:
+          - http
+          - https
+      address:
+        default: localhost
+        enum:
+          - localhost
+
+security:
+  - bearerAuth: []
+paths:
+  /processors:
+    description: REST endpoint responsible to handle requests related to processors resource
+    get:
+      tags:
+      - "processor"
+      summary: "List avaliable processors"
+      description: "Lists all available processors"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Processor"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /boards:
+    get:
+      tags:
+      - "motherboard"
+      summary: "List avaliable motherboards"
+      description: "Lists all available motherboards"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Motherboard"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /rammodules:
+    get:
+      tags:
+      - "ram"
+      summary: "List avaliable ram modules"
+      description: "Lists all available ram modules"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/MemoryModule"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /videocards:
+    get:
+      tags:
+      - "video card"
+      summary: "List avaliable video card"
+      description: "Lists all available video card"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/VideoCard"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /orders:
+    get:
+      tags:
+      - "orders"
+      summary: "List all submitted orders"
+      description: "Lists all orders"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/VideoCard"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+      - "new order"
+      summary: "Creates a new order"
+      description: ""
+      requestBody:
+        description: ""
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users/{user}/orders:
+    get:
+      tags:
+      - "user orders"
+      summary: "List user orders"
+      description: "Lists all user orders"
+      parameters:
+        - name: user
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The user who owns a set of orders
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users/{user}/orders/{order}:
+    get:
+      tags:
+      - "single user order"
+      summary: "View a single user order"
+      description: "Display a single user order selected by ID"
+      parameters:
+        - name: user
+          in: path
+          schema:
+            type: string
+          required: true
+          description: the user who owns the requested order
+        - name: order
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The user's order to be displayed
+
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        password:
+          type: string
+        username:
+          type: string
+      example:
+        - id: 62e49df3-ed50-4f92-b838-2e9eb4fda8a7
+          email: user@example.com
+          first_name: User
+          last_name: Example
+          password: s4mpl3?455w0Pd
+          username: username
+    RAMModuleOrder:
+      properties:
+        id:
+          type: integer
+          format: int32
+        memory_module_id:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+    MemoryModuleArray:
+      type: array
+      items:
+        $ref: "#/components/schemas/RAMModuleOrder"
+      example:
+        - memory_module_id: 8c386eb4-6509-4ac6-ad8b-efc7b02264d6
+          quantity: 2
+        - memory_module_id: ba3915ab-eb7a-4033-b3ce-42efa9231832
+          quantity: 1
+    Processor:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        manufacturer:
+          type: string
+      example:
+        - id: e09b6410-4c42-40f8-af54-48fe47b6d89c
+          name: Rizen 7
+          manufacturer: AMD
+        - id: 65a16710-6b82-4999-b370-d06054b18806
+          name: Core i7
+          manufacturer: Intel
+    Motherboard:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        supported_processors:
+          type: array
+        ram_slots:
+          type: integer
+        max_ram_total:
+          type: integer
+        integrated_video:
+          type: boolean
+      example:
+        - id: b3429e93-1a9b-474a-9f9f-c1bcb4bea0a2
+          name: Asus prime
+          supported_processors: Intel
+          ram_slots: 2
+          max_ram_total: 16
+          integrated_video: false
+        - id: 6b5d0262-54d0-435f-96ed-8aeec2885edd
+          name: Asrock Fatal
+          supported_processors:
+            enum:
+              - Intel
+              - AMD
+          ram_slots: 2
+          max_ram_total: 64
+          integrated_video: True
+    MemoryModule:
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        size:
+          type: integer
+      example:
+        - id: 8c386eb4-6509-4ac6-ad8b-efc7b02264d6
+          title: Kingston HyperX 16
+          size: 16
+        - id: 347c3277-91ca-42dc-9364-5ae09cd4741b
+          title: Kingston HyperX 32
+          size: 32
+    VideoCard:
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+      example:
+        - id: 4c6d96e2-4461-40c3-b7d9-e76fba89b0a3
+          title: Placa de Video Radeon RX 580 8GB
+    Order:
+      properties:
+        id:
+          type: string
+        user:
+          type: string
+        processor:
+          type: string
+        mainboard:
+          type: string
+        ram_module:
+          type: array
+          items:
+            $ref: "#/components/schemas/MemoryModuleArray"
+        video_card:
+          type: string
+      example:
+        - id: a49cf564-8c8d-4f8f-b9bf-0463a797a931
+          user: 62e49df3-ed50-4f92-b838-2e9eb4fda8a7
+          processor:
+            - id: e09b6410-4c42-40f8-af54-48fe47b6d89c
+              name: Rizen 7
+              manufacturer: AMD
+          mainboard:
+            - id: 6b5d0262-54d0-435f-96ed-8aeec2885edd
+              name: AsRock Fatal
+          ram_module:
+            - memory_module_id: 47c3277-91ca-42dc-9364-5ae09cd4741b
+              title: Kingston HyperX 32
+              quantity: 2
+          video_card:
+            - id: 4c6d96e2-4461-40c3-b7d9-e76fba89b0a3
+              title: Placa de Video Radeon RX 580 8GB
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          enum:
+            - 200
+            - 400
+            - 500
+          format: int32
+        message:
+          type: string
