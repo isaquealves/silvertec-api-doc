@@ -212,6 +212,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /users/auth:
+    post:
+      tags:
+      - "auth user"
+      summary: "Authenticate user by given information"
+      description: "A user has to submit his username and password information in order to gain access to certain features"
+      requestBody:
+        description: ""
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserAuth"
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   securitySchemes:
     BearerAuth:
@@ -219,6 +246,18 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    AuthResponse:
+      properties:
+        success:
+          type: boolean
+        token:
+          type: string
+    UserAuth:
+      properties:
+        username:
+          type: string
+        password:
+          type: string
     User:
       properties:
         id:
