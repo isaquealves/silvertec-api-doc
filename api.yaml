@@ -286,6 +286,7 @@ components:
       properties:
         id:
           type: string
+          readOnly: true
         email:
           type: string
         first_name:
@@ -306,29 +307,12 @@ components:
           password: s4mpl3?455w0Pd
           username: username
           token: 'sample-jwt-token'
-    RAMModuleOrder:
-      properties:
-        id:
-          type: integer
-          format: int32
-        memory_module_id:
-          type: string
-        quantity:
-          type: integer
-          format: int32
-    MemoryModuleArray:
-      type: array
-      items:
-        $ref: "#/components/schemas/RAMModuleOrder"
-      example:
-        - memory_module_id: 8c386eb4-6509-4ac6-ad8b-efc7b02264d6
-          quantity: 2
-        - memory_module_id: ba3915ab-eb7a-4033-b3ce-42efa9231832
-          quantity: 1
     Processor:
       properties:
         id:
           type: string
+          format: uuid
+          readOnly: true
         name:
           type: string
         manufacturer:
@@ -337,15 +321,15 @@ components:
         - id: e09b6410-4c42-40f8-af54-48fe47b6d89c
           name: Rizen 7
           manufacturer: AMD
-          image: rizen_box.png
         - id: 65a16710-6b82-4999-b370-d06054b18806
           name: Core i7
           manufacturer: Intel
-          image: core_i7.png
     Motherboard:
       properties:
         id:
           type: string
+          format: uuid
+          readOnly: true
         name:
           type: string
         supported_processors:
@@ -362,9 +346,6 @@ components:
           supported_processors: Intel
           ram_slots: 2
           max_ram_total: 16
-          images:
-          - box_image_asus_prime.png
-          - board_photo_asus_prime.png
           integrated_video: false
         - id: 6b5d0262-54d0-435f-96ed-8aeec2885edd
           name: Asrock Fatal
@@ -375,9 +356,6 @@ components:
           ram_slots: 4
           max_ram_total: 64
           integrated_video: True
-          images:
-          - box_image_asrock.png
-          - board_photo_asrock.png
     MemoryModule:
       properties:
         id:
@@ -390,11 +368,9 @@ components:
         - id: 8c386eb4-6509-4ac6-ad8b-efc7b02264d6
           title: Kingston HyperX 16
           size: 16
-          image: hyperx_16.png
         - id: 347c3277-91ca-42dc-9364-5ae09cd4741b
           title: Kingston HyperX 32
           size: 32
-          image: hyperx_32.png
     VideoCard:
       properties:
         id:
@@ -404,11 +380,11 @@ components:
       example:
         - id: 4c6d96e2-4461-40c3-b7d9-e76fba89b0a3
           title: Placa de Video Radeon RX 580 8GB
-          image: radeon_rx_580.png
     Order:
       properties:
         id:
           type: string
+          readOnly: true
         user:
           type: string
         processor:
@@ -418,7 +394,7 @@ components:
         ram_module:
           type: array
           items:
-            $ref: "#/components/schemas/MemoryModuleArray"
+            $ref: "#/components/schemas/MemoryModule"
         video_card:
           type: string
       example:
@@ -428,24 +404,18 @@ components:
             - id: e09b6410-4c42-40f8-af54-48fe47b6d89c
               name: Rizen 7
               manufacturer: AMD
-              image: rizen_box.png
           mainboard:
             - id: 6b5d0262-54d0-435f-96ed-8aeec2885edd
               name: AsRock Fatal
               max_ram_total: 64
               ram_slots: 4
               integrated_video: false
-              images:
-              - box_image_asrock.png
-              - board_photo_asrock.png
           ram_module:
-            - memory_module_id: 47c3277-91ca-42dc-9364-5ae09cd4741b
+            - id: 47c3277-91ca-42dc-9364-5ae09cd4741b
               title: Kingston HyperX 32
-              quantity: 2
           video_card:
             - id: 4c6d96e2-4461-40c3-b7d9-e76fba89b0a3
               title: Placa de Video Radeon RX 580 8GB
-              image: radeon_rx_580.png
     Error:
       type: object
       required:

@@ -10,4 +10,4 @@ The spec is built using [OpenAPI 3.0](https://github.com/OAI/OpenAPI-Specificati
 
 We setted up a easy way to display the documentation using [redoc](https://github.com/Redocly/redoc).
 
-Run ``` python serve-doc.py```  script and enjoy it or use any webserver of you like.
+Run ``` python serve-doc.py```  script and enjoy it at [localhost:8080](http://localhost:8080) or use any webserver of you like.
